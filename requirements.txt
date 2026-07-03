@@ -1,0 +1,11 @@
+fastapi==0.115.0
+uvicorn==0.30.6
+python-multipart==0.0.9
+torch==2.2.2
+torchvision==0.17.2
+opencv-python-headless==4.10.0.84
+numpy==1.26.4
+Pillow==10.4.0
+streamlit==1.37.1
+requests==2.32.3
+pydantic==2.8.2
