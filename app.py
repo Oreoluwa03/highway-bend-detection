@@ -156,7 +156,7 @@ with tab1:
             with st.spinner("Analysing road..."):
                 try:
                     files = {"file": (uploaded.name, uploaded.getvalue(), uploaded.type)}
-                    resp = requests.post(f"{API_URL}/predict", files=files, timeout=15)
+                    resp = requests.post(f"{API_URL}/predict", files=files, timeout=60)
                     if resp.status_code == 200:
                         data = resp.json()
                         if data["is_alert"]:
