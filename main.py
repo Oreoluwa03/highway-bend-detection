@@ -78,20 +78,13 @@ def download_model():
     if not os.path.exists(MODEL_PATH):
         print("⬇️ Downloading model from Google Drive...")
         os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
-        url = f"https://drive.google.com/uc?export=download&id={GDRIVE_ID}"
-        response = requests.get(url, stream=True)
-        # Handle Google Drive large file confirmation
-        for key, value in response.cookies.items():
-            if key.startswith("download_warning"):
-                url = f"https://drive.google.com/uc?export=download&id={GDRIVE_ID}&confirm={value}"
-                response = requests.get(url, stream=True)
-                break
-        with open(MODEL_PATH, "wb") as f:
-            for chunk in response.iter_content(chunk_size=32768):
-                if chunk:
-                    f.write(chunk)
+        import gdown
+        gdown.download(
+            f"https://drive.google.com/uc?id={GDRIVE_ID}",
+            MODEL_PATH,
+            quiet=False
+        )
         print("✅ Model downloaded successfully")
-
 download_model()
 
 # Load model at startup
