@@ -10,3 +10,5 @@ streamlit
 requests
 pydantic
 gdown
+streamlit-webrtc
+av
