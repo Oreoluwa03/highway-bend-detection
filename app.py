@@ -37,7 +37,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ── API URL ────────────────────────────────────────────────────────────────────
-API_URL = "http://localhost:8000"
+API_URL = "https://highway-bend-api.onrender.com"
 
 # ── Load model for live feed (runs locally, no API call needed) ────────────────
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "model", "model.pth")
