@@ -57,14 +57,14 @@ def build_model():
     for param in model.parameters():
         param.requires_grad = False
     model.classifier = nn.Sequential(
-        nn.Dropout(0.3),
-        nn.Linear(model.last_channel, 128),
-        nn.ReLU(),
-        nn.Dropout(0.3),
-        nn.Linear(128, 64),
+        nn.Dropout(0.2),
+        nn.Linear(model.last_channel, 256),
         nn.ReLU(),
         nn.Dropout(0.2),
-        nn.Linear(64, 2)
+        nn.Linear(256, 128),
+        nn.ReLU(),
+        nn.Dropout(0.2),
+        nn.Linear(128, 2)
     )
     model = model.to(device)
     model.eval()
