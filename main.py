@@ -87,29 +87,43 @@ def download_model():
         print("✅ Model downloaded successfully")
 download_model()
 
-# Load model at startup
-model_loaded = False
+# ============================================================
+# DIAGNOSTIC PATCH — paste this in place of the "Load model at
+# startup" block in main.py to see EXACTLY what's mismatching.
+# ============================================================
 
+model_loaded = False
 if os.path.exists(MODEL_PATH):
     checkpoint = torch.load(MODEL_PATH, map_location=device)
+
     if isinstance(checkpoint, dict) and 'state_dict' in checkpoint:
-        model = build_model()
-        model.load_state_dict(checkpoint['state_dict'])
-    elif isinstance(checkpoint, dict):
-        model = build_model()
-        try:
-            model.load_state_dict(checkpoint)
-        except RuntimeError:
-            model = build_model()
-            model.load_state_dict(checkpoint, strict=False)
+        checkpoint = checkpoint['state_dict']
+
+    model = build_model()
+
+    if isinstance(checkpoint, dict):
+        result = model.load_state_dict(checkpoint, strict=False)
+        print("=" * 60)
+        print("MODEL LOAD DIAGNOSTIC")
+        print("=" * 60)
+        print(f"Missing keys (left as random init):  {result.missing_keys}")
+        print(f"Unexpected keys (ignored from file):  {result.unexpected_keys}")
+        if result.missing_keys or result.unexpected_keys:
+            print("⚠️  ARCHITECTURE MISMATCH — the checkpoint does NOT match")
+            print("    build_model()'s architecture. Classifier weights above")
+            print("    are randomly initialized, which explains random/50-50")
+            print("    predictions regardless of the input image.")
+        else:
+            print("✅ Checkpoint matches architecture exactly — clean load.")
     else:
         model = checkpoint
+
     model.eval()
     model_loaded = True
-    print(f"✅ Model loaded from {MODEL_PATH}")
+    print(f"Model object loaded from {MODEL_PATH}")
 else:
     model = build_model()
-    print(f"⚠️  model.pth not found — running with random weights")
+    print(f"⚠️ model.pth not found — running with random weights")
     # ── Response schemas ───────────────────────────────────────────────────────────
 class PredictionResponse(BaseModel):
     prediction: str
